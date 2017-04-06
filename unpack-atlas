@@ -1,0 +1,36 @@
+#!/bin/bash
+args=("$@")
+
+input=("${args[0]}")
+outpuFolder=("${args[1]}")
+numberOfLines=$(wc -l < ${input})
+inputPng=$(sed -n '2p' < $input)
+
+if [ "${outpuFolder:len}" != "/" ]; then
+  outpuFolder=$outpuFolder"/"
+fi
+
+echo Input file: $input
+echo Input image: $inputPng
+echo Output folder: $outpuFolder
+
+for ((i=7;i <= numberOfLines;i+=7));do
+	name=$(sed -n ${i}p < $input)
+	index=$(sed -n $((${i}+6))p < $input)
+	position=$(sed -n $((${i}+2))p < $input)
+	size=$(sed -n $((${i}+3))p < $input)
+
+	index=${index:9}
+	position=${position:6}
+ 	position=+${position/", "/"+"}
+	size=${size:8}
+	size=${size/", "/"x"}
+
+	if [ "$index" -eq "-1" ]; then
+   		echo Unpacking $name "(only single frame)"
+		convert ${inputPng} -crop ${size}${position} +repage ${outpuFolder}${name}.png
+	else
+		echo Unpacking $name ${index}
+		convert ${inputPng} -crop ${size}${position} +repage "${outpuFolder}${name}_${index}.png"
+	fi
+done
