@@ -28,9 +28,10 @@ for ((i=7;i <= numberOfLines;i+=7));do
 
 	if [ "$index" -eq "-1" ]; then
    		echo Unpacking $name "(only single frame)"
-		convert ${inputPng} -crop ${size}${position} +repage ${outpuFolder}${name}.png
+		convert ${inputPng} -define png:format=png32 -format png -crop ${size}${position} +repage ${outpuFolder}${name}.png
 	else
 		echo Unpacking $name ${index}
-		convert ${inputPng} -crop ${size}${position} +repage "${outpuFolder}${name}_${index}.png"
+		convert ${inputPng} -define png:format=png32 -format png -crop ${size}${position} +repage "${outpuFolder}${name}_${index}.png"
 	fi
 done
+
