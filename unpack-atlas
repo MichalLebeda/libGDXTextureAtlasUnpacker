@@ -12,8 +12,8 @@ if [ "${outpuFolder:len}" != "/" ]; then
   outpuFolder=$outpuFolder"/"
 fi
 
-echo Input  atlas file: $inputAtlasFile
-echo Input image file: $inputPngFile
+echo -e "\e[92mInput atlas file: \e[39m$inputAtlasFile"
+echo -e "\e[92mInput image file: \e[39m$inputPngFile"
 echo Output folder: $outpuFolder
 
 for ((i=7;i <= numberOfLines;i+=7));do
@@ -29,10 +29,10 @@ for ((i=7;i <= numberOfLines;i+=7));do
 	size=${size/", "/"x"}
 
 	if [ "$index" -eq "-1" ]; then
-   		echo Unpacking $name "(only single frame)"
+   		echo -e "[\e[92mUnpacking Region\e[39m] $name"
 		convert ${inputPngFile} -define png:format=png32 -format png -crop ${size}${position} +repage ${outpuFolder}${name}.png
 	else
-		echo Unpacking $name ${index}
+		echo -e "[\e[92mUnpacking Animation Frame\e[39m] [\e[91m${index}\e[39m] $name "
 		convert ${inputPngFile} -define png:format=png32 -format png -crop ${size}${position} +repage "${outpuFolder}${name}_${index}.png"
 	fi
 done
