@@ -1,24 +1,26 @@
 #!/bin/bash
 args=("$@")
 
-input=("${args[0]}")
+inputAtlasFile=("${args[0]}")
+inputPngFile=$(echo $inputAtlasFile | cut -f 1 -d '.').png
 outpuFolder=("${args[1]}")
-numberOfLines=$(wc -l < ${input})
-inputPng=$(sed -n '2p' < $input)
+
+numberOfLines=$(wc -l < ${inputAtlasFile})
+
 
 if [ "${outpuFolder:len}" != "/" ]; then
   outpuFolder=$outpuFolder"/"
 fi
 
-echo Input file: $input
-echo Input image: $inputPng
+echo Input  atlas file: $inputAtlasFile
+echo Input image file: $inputPngFile
 echo Output folder: $outpuFolder
 
 for ((i=7;i <= numberOfLines;i+=7));do
-	name=$(sed -n ${i}p < $input)
-	index=$(sed -n $((${i}+6))p < $input)
-	position=$(sed -n $((${i}+2))p < $input)
-	size=$(sed -n $((${i}+3))p < $input)
+	name=$(sed -n ${i}p < $inputAtlasFile)
+	index=$(sed -n $((${i}+6))p < $inputAtlasFile)
+	position=$(sed -n $((${i}+2))p < $inputAtlasFile)
+	size=$(sed -n $((${i}+3))p < $inputAtlasFile)
 
 	index=${index:9}
 	position=${position:6}
@@ -28,10 +30,10 @@ for ((i=7;i <= numberOfLines;i+=7));do
 
 	if [ "$index" -eq "-1" ]; then
    		echo Unpacking $name "(only single frame)"
-		convert ${inputPng} -define png:format=png32 -format png -crop ${size}${position} +repage ${outpuFolder}${name}.png
+		convert ${inputPngFile} -define png:format=png32 -format png -crop ${size}${position} +repage ${outpuFolder}${name}.png
 	else
 		echo Unpacking $name ${index}
-		convert ${inputPng} -define png:format=png32 -format png -crop ${size}${position} +repage "${outpuFolder}${name}_${index}.png"
+		convert ${inputPngFile} -define png:format=png32 -format png -crop ${size}${position} +repage "${outpuFolder}${name}_${index}.png"
 	fi
 done
 
