@@ -5,6 +5,6 @@ Unpack packed libGDX texture atlases
 ```imagemagick```
 
 ## Usage
-```unpack-atlas atlas-file.atlas outputdir```
+```./unpack-atlas atlas-file.atlas outputdir```
 
 FEEL FREE TO EDIT/IMPROVE CODE, THIS IS MY FIRST PUBLIC BASH SCRIPT
